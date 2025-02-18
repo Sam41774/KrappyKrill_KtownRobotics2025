@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 
 import org.firstinspires.ftc.teamcode.Robot_Constants.TelemetryData;
 import org.firstinspires.ftc.teamcode.Subsystems.Claw;
+import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.HorzSlide;
 import org.firstinspires.ftc.teamcode.Subsystems.Shoulder;
 import org.firstinspires.ftc.teamcode.Subsystems.InTakeArm;
@@ -53,6 +54,12 @@ public class KrillyTeleop25 extends LinearOpMode {
                 hardwareMap.get(DcMotorEx.class,"leftVert"),
                 hardwareMap.get(DcMotorEx.class,"rightVert")
         );
+        Drive driveTrain = new Drive(
+                hardwareMap.get(DcMotorEx.class, "leftFront"),
+                hardwareMap.get(DcMotorEx.class, "rightFront"),
+                hardwareMap.get(DcMotorEx.class, "leftBack"),
+                hardwareMap.get(DcMotorEx.class, "rightBack")
+        );
 
         waitForStart();
 
@@ -80,7 +87,7 @@ public class KrillyTeleop25 extends LinearOpMode {
             boolean rbPressed = gamepad1.right_bumper;
 
 
-            left_y = zeroAnalogInput(gamepad1.left_stick_y);
+            left_y = -zeroAnalogInput(gamepad1.left_stick_y);
             right_y = zeroAnalogInput(gamepad1.right_stick_y);
             left_x = zeroAnalogInput(gamepad1.left_stick_x);
             right_x = zeroAnalogInput(gamepad1.right_stick_x);
@@ -139,6 +146,8 @@ public class KrillyTeleop25 extends LinearOpMode {
             else{
                 vertSlide.setPower(0,0);
             }
+
+            driveTrain.drive(left_y, left_x, right_x);
 
             telemetry.addData("motor Position" , TelemetryData.inTakeArmCount);
             telemetry.update();

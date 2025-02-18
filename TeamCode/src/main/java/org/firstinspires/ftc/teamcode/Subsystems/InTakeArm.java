@@ -23,7 +23,7 @@ public class InTakeArm {
     public void goUp(){
         if (this.motor.getCurrentPosition() > RC_inTakeArm.minCount){
             int position = this.motor.getCurrentPosition();
-            this.motor.setTargetPosition(position - 10);
+            this.motor.setTargetPosition(RC_inTakeArm.minCount);
             this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.motor.setPower(RC_inTakeArm.power);
         }
@@ -38,7 +38,7 @@ public class InTakeArm {
     public void goDown(){
         if (this.motor.getCurrentPosition() < RC_inTakeArm.maxCount){
             int position = this.motor.getCurrentPosition();
-            this.motor.setTargetPosition(position + 10);
+            this.motor.setTargetPosition(RC_inTakeArm.maxCount);
             this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.motor.setPower(RC_inTakeArm.power);
         }
