@@ -6,7 +6,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Config
 public class RC_inTakeArm {
 
-    public static int minCount = 360;
+    public static int minCount = 240;
     public static int maxCount = 550;
     public static int storePosition = 10;
     public static double power = 0.8;

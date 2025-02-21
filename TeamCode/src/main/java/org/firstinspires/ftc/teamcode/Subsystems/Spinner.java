@@ -28,6 +28,7 @@ public class Spinner {
         this.left.setPower(RC_Spinner.leftOutMax);
         this.right.setPower(RC_Spinner.rightOutMax);
         this.top.setPower(RC_Spinner.topOutMax);
+        TelemetryData.spinnerMode=2;
     }
 
     public void stop(){
