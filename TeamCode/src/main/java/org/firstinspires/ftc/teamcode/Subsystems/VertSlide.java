@@ -75,4 +75,26 @@ public class VertSlide {
         // Update telemetry.
         TelemetryData.slideCount = left.getCurrentPosition();
     }
+
+    public void goToIntake(){
+        left.setTargetPosition(RC_VertSlide.inTakePosition);
+        right.setTargetPosition(RC_VertSlide.inTakePosition);
+
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        left.setPower(RC_VertSlide.autoPower);
+        right.setPower(RC_VertSlide.autoPower);
+    }
+
+    public void goToOuttake(){
+        left.setTargetPosition(RC_VertSlide.outTakePosition);
+        right.setTargetPosition(RC_VertSlide.outTakePosition);
+
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        left.setPower(RC_VertSlide.autoPower);
+        right.setPower(RC_VertSlide.autoPower);
+    }
 }

@@ -3,6 +3,8 @@ package org.firstinspires.ftc.teamcode.Subsystems;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
+import org.firstinspires.ftc.teamcode.Robot_Constants.RC_Driving;
+
 import com.qualcomm.robotcore.hardware.IMU;
 
 public class Drive {
@@ -42,9 +44,9 @@ public class Drive {
         double rotatedY = x * Math.sin(-heading) + y * Math.cos(-heading);
 
         // Reduce speeds (adjust scaling if needed)
-        rotatedX *= 0.5;
-        rotatedY *= 0.5;
-        rx *= 0.5;
+        rotatedX *= RC_Driving.speedMultiplier;
+        rotatedY *= RC_Driving.speedMultiplier;
+        rx *= RC_Driving.speedMultiplier;
 
         // Calculate motor powers
         double denominator = Math.max(Math.abs(rotatedY) + Math.abs(rotatedX) + Math.abs(rx), 1);
@@ -61,6 +63,7 @@ public class Drive {
     }
 
     public void turnToAngle(double targetAngle) {
+        targetAngle += getRobotHeading();
         double Kp = 0.02; // Tune this value for better response
         double error = targetAngle - getRobotHeading();
 
@@ -69,7 +72,7 @@ public class Drive {
             double turnPower = Kp * error;
 
             // Ensure turn power doesn't exceed safe limits
-            turnPower = Math.max(-0.5, Math.min(0.5, turnPower));
+            turnPower = Math.max(-RC_Driving.speedTurnMultiplier, Math.min(RC_Driving.speedTurnMultiplier, turnPower));
 
             // Apply power to rotate the robot
             frontLeft.setPower(turnPower);

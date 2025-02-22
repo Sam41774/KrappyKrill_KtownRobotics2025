@@ -100,6 +100,8 @@ public class KrillyTeleop25 extends LinearOpMode {
         double right_x = gamepad1.right_stick_x;
         double left_t = gamepad1.left_trigger;
         double right_t = gamepad1.right_trigger;
+        double left_y2 = gamepad2.left_stick_y;
+        double left_x2 = gamepad2.left_stick_y;
 
         boolean a_state = false;
         boolean b_state = false;
@@ -108,6 +110,9 @@ public class KrillyTeleop25 extends LinearOpMode {
 
         boolean rightBumperState = false;
         boolean leftBumperState = false;
+
+        boolean rightBumperState2 = false;
+        boolean leftBumperState2 = false;
 
         while(opModeIsActive()){
 
@@ -119,15 +124,25 @@ public class KrillyTeleop25 extends LinearOpMode {
             boolean rbPressed = gamepad2.right_bumper;
             boolean lbPressed = gamepad2.left_bumper;
 
+            boolean rb2Pressed = gamepad1.right_bumper;
+            boolean lb2Pressed = gamepad1.left_bumper;
+
 
             left_y = -zeroAnalogInput(gamepad1.left_stick_y);
             right_y = zeroAnalogInput(gamepad1.right_stick_y);
             left_x = zeroAnalogInput(gamepad1.left_stick_x);
             right_x = zeroAnalogInput(gamepad1.right_stick_x);
+
+
             left_t = zeroAnalogInput(gamepad2.left_trigger);
             right_t = zeroAnalogInput(gamepad2.right_trigger);
+            left_y2 = -zeroAnalogInput(gamepad2.left_stick_y);
+            left_x2 = zeroAnalogInput(gamepad2.left_stick_x);
 
 
+
+
+            /////////////////////////////////////////////////////////////claw
             if (Apressed && !a_state && TelemetryData.clawPosition == 0) {
                 claw.close();
             }else if (Apressed && !a_state && TelemetryData.clawPosition == 1) {
@@ -135,6 +150,9 @@ public class KrillyTeleop25 extends LinearOpMode {
             }
             a_state = Apressed;
 
+
+
+            ///////////////////////////////////////////shoudler
             if (Bpressed && !b_state) {
                 shoulder.inTakePosition();
                 wrist.inTake();
@@ -147,13 +165,15 @@ public class KrillyTeleop25 extends LinearOpMode {
             }
             x_state = Xpressed;
 
-            if (Ypressed != y_state){
+            if (Ypressed && !y_state){
                 shoulder.outTakePosition();
                 wrist.outTake();
             }
             y_state = Ypressed;
 
 
+
+            ////////////////////////////////arm intake
             if (gamepad2.dpad_up) {
                 horzSlide.goOut();
             } else if (gamepad2.dpad_down) {
@@ -166,6 +186,9 @@ public class KrillyTeleop25 extends LinearOpMode {
                 inTakeArm.goUp();
             }
 
+
+
+            /////////////////////////////////////////////////////////////////spinner
             if (rbPressed != rightBumperState && TelemetryData.spinnerMode!=1){
                 spinner.takeIn();
             }else if (rbPressed != rightBumperState && TelemetryData.spinnerMode!=0){
@@ -180,14 +203,53 @@ public class KrillyTeleop25 extends LinearOpMode {
             }
             leftBumperState = lbPressed;
 
+            /*
+            ////////////////////////////////////////////////////////////////////////vert slide
             if (right_t - left_t != 0){
                 vertSlide.setPower(right_t,left_t);
             }
             else{
                 vertSlide.setPower(0,0);
             }
+            */
 
+            vertSlide.setPower(left_y2, 0);
+
+            if (right_t >= 0.5){
+                vertSlide.goToIntake();
+            }
+
+            if (left_t >= 0.5){
+                vertSlide.goToOuttake();
+            }
+
+
+
+            /////////////////////////// drive train
             driveTrain.drive(left_y, left_x, right_x);
+
+            if (gamepad1.options) {
+                driveTrain.resetHeading();
+            }
+
+            if (rb2Pressed && !rightBumperState2){
+                driveTrain.turnToAngle(90);
+            }
+            rb2Pressed = rightBumperState2;
+
+            if (lb2Pressed && !leftBumperState2){
+                driveTrain.turnToAngle(-90);
+            }
+            lb2Pressed = leftBumperState2;
+
+
+
+
+
+
+
+
+
 
             telemetry.addData("motor Position" , TelemetryData.inTakeArmCount);
             telemetry.update();
