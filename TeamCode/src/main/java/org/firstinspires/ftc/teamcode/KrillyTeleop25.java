@@ -187,6 +187,10 @@ public class KrillyTeleop25 extends LinearOpMode {
                 vertSlide.setPower(0,0);
             }
 
+            if(gamepad1.options){
+                driveTrain.resetHeading();
+            }
+
             driveTrain.drive(left_y, left_x, right_x);
 
             telemetry.addData("motor Position" , TelemetryData.inTakeArmCount);

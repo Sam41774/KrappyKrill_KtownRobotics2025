@@ -27,4 +27,9 @@ public class Wrist {
         TelemetryData.wristPosition = 2;
     }
 
+    public void touchBar(){
+        this.servo.setPosition(RC_Wrist.bar);
+        TelemetryData.wristPosition = 3;
+    }
+
 }

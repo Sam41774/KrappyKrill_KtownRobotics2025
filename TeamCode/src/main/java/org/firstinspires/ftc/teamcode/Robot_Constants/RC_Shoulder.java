@@ -12,4 +12,9 @@ public class RC_Shoulder {
 
     public static double clipLeft = 0.0;
     public static double clipRight = 1.0;
+
+    public static double touchLeft = 0.3;
+    public static double touchRight = 0.7;
+
+
 }
