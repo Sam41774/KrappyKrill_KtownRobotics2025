@@ -180,12 +180,15 @@ public class KrillyTeleop25 extends LinearOpMode {
             }
             leftBumperState = lbPressed;
 
-            if (right_t - left_t != 0){
-                vertSlide.setPower(right_t,left_t);
+            if (right_t != 0){
+                vertSlide.runToMax();
             }
-            else{
-                vertSlide.setPower(0,0);
+            else if (left_t != 0){
+                vertSlide.runToMin();
             }
+            //else{
+            //    vertSlide.setPower(0,0);
+            //}
 
             if(gamepad1.options){
                 driveTrain.resetHeading();
