@@ -25,6 +25,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
+
+@Autonomous (name = "climylim")
 public final class climTest extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException{
