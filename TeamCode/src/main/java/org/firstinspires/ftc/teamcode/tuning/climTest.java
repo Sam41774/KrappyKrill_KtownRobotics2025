@@ -9,13 +9,55 @@ import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.MecanumDrive;
+import org.firstinspires.ftc.teamcode.Subsystems.Claw;
+import org.firstinspires.ftc.teamcode.Subsystems.HorzSlide;
+import org.firstinspires.ftc.teamcode.Subsystems.Shoulder;
+import org.firstinspires.ftc.teamcode.Subsystems.Spinner;
+import org.firstinspires.ftc.teamcode.Subsystems.VertSlide;
+import org.firstinspires.ftc.teamcode.Subsystems.Wrist;
+import org.firstinspires.ftc.teamcode.Subsystems.InTakeArm;
 import org.firstinspires.ftc.teamcode.TankDrive;
+
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.Servo;
+import com.qualcomm.robotcore.util.ElapsedTime;
 
 public final class climTest extends LinearOpMode{
     @Override
     public void runOpMode() throws InterruptedException{
-        Pose2d startPose = new Pose2d(0,0,0);
+        Claw claw = new Claw(
+                hardwareMap.get(Servo.class, "claw")
+        );
+        Shoulder shoulder = new Shoulder(
+                hardwareMap.get(Servo.class,"leftArm"),
+                hardwareMap.get(Servo.class, "rightArm")
+        );
+        HorzSlide horzSlide = new HorzSlide(
+                hardwareMap.get(Servo.class,"leftHorz"),
+                hardwareMap.get(Servo.class, "rightHorz")
+        );
+        InTakeArm inTakeArm = new InTakeArm(
+                hardwareMap.get(DcMotorEx.class, "intakeMotor")
+        );
+        Spinner spinner = new Spinner(
+                hardwareMap.get(CRServo.class, "left"),
+                hardwareMap.get(CRServo.class, "right"),
+                hardwareMap.get(CRServo.class,"top")
+        );
+        Wrist wrist = new Wrist(
+                hardwareMap.get(Servo.class, "wrist")
+        );
+        VertSlide vertSlide = new VertSlide(
+                hardwareMap.get(DcMotorEx.class,"leftVert"),
+                hardwareMap.get(DcMotorEx.class,"rightVert")
+        );
 
+
+
+        Pose2d startPose = new Pose2d(72,-9,90);
 
 
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
@@ -25,9 +67,26 @@ public final class climTest extends LinearOpMode{
 
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
-                            .splineTo(new Vector2d(50, 50), Math.toRadians(90))
-                            .splineTo(new Vector2d(0, 100), Math.toRadians(45))
+                            .splineTo(new Vector2d(19, 9), Math.toRadians(90))
+                            .splineTo(new Vector2d(54, 54), Math.toRadians(135))
                             .build());
+            /*inTakeArm.goDown();
+            horzSlide.goOut();
+            spinner.takeIn();
+            horzSlide.goIn();
+            vertSlide.runToMin();
+            shoulder.inTakePosition();
+            spinner.stop();
+            claw.close();
+            vertSlide.runToMax();
+            shoulder.outTakePosition();
+            claw.open(); */
+
+            //Temp comments to stop from using subsytems.
+
+
+
+
         } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {
             TankDrive drive = new TankDrive(hardwareMap, startPose);
 
@@ -35,11 +94,38 @@ public final class climTest extends LinearOpMode{
 
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
-                            .splineTo(new Vector2d(50, 50), Math.toRadians(90))
-                            .splineTo(new Vector2d(0, 100), Math.toRadians(45))
+                            .splineTo(new Vector2d(19, 9), Math.toRadians(90))
+                            .splineTo(new Vector2d(54, 54), Math.toRadians(135))
                             .build());
+            /*inTakeArm.goDown();
+            horzSlide.goOut();
+            spinner.takeIn();
+            horzSlide.goIn();
+            vertSlide.runToMin();
+            shoulder.inTakePosition();
+            spinner.stop();
+            claw.close();
+            vertSlide.runToMax();
+            shoulder.outTakePosition();
+            claw.open();*/
         } else {
             throw new RuntimeException();
         }
+
+
+        /*
+            inTakeArm.goDown();
+            horzSlide.goOut();
+            spinner.takeIn();
+            horzSlide.goIn();
+            vertSlide.runToMin();
+            shoulder.inTakePosition();
+            spinner.stop();
+            claw.close();
+            vertSlide.runToMax();
+            shoulder.outTakePosition();
+            claw.open();
+
+        */
     }
 }
