@@ -25,8 +25,8 @@ public final class climTest extends LinearOpMode{
 
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
-                            .splineTo(new Vector2d(30, 69), Math.toRadians(90))
-                            .splineTo(new Vector2d(0, 80), Math.toRadians(45))
+                            .splineTo(new Vector2d(50, 50), Math.toRadians(90))
+                            .splineTo(new Vector2d(0, 100), Math.toRadians(45))
                             .build());
         } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {
             TankDrive drive = new TankDrive(hardwareMap, startPose);
@@ -35,8 +35,8 @@ public final class climTest extends LinearOpMode{
 
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
-                            .splineTo(new Vector2d(15, 15), Math.toRadians(90))
-                            .splineTo(new Vector2d(0, 40), Math.toRadians(45))
+                            .splineTo(new Vector2d(50, 50), Math.toRadians(90))
+                            .splineTo(new Vector2d(0, 100), Math.toRadians(45))
                             .build());
         } else {
             throw new RuntimeException();
