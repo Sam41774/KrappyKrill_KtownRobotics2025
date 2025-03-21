@@ -59,7 +59,7 @@ public final class climTest extends LinearOpMode{
 
 
 
-        Pose2d startPose = new Pose2d(72,-9,90);
+        Pose2d startPose = new Pose2d(72,-9,0);
 
 
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
@@ -96,7 +96,7 @@ public final class climTest extends LinearOpMode{
 
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
-                            .splineTo(new Vector2d(19, 9), Math.toRadians(90))
+                            .splineTo(new Vector2d(19, 9), Math.toRadians(0))
                             .splineTo(new Vector2d(54, 54), Math.toRadians(135))
                             .build());
             /*inTakeArm.goDown();
