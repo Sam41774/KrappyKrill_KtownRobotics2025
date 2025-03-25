@@ -42,9 +42,9 @@ public class Drive {
         double rotatedY = x * Math.sin(-heading) + y * Math.cos(-heading);
 
         // Reduce speeds (adjust scaling if needed)
-        rotatedX *= 0.7;
-        rotatedY *= 0.7;
-        rx *= 0.7;
+        rotatedX *= 1;
+        rotatedY *= 1;
+        rx *= 1;
 
         // Calculate motor powers
         double denominator = Math.max(Math.abs(rotatedY) + Math.abs(rotatedX) + Math.abs(rx), 1);
@@ -69,7 +69,7 @@ public class Drive {
             double turnPower = Kp * error;
 
             // Ensure turn power doesn't exceed safe limits
-            turnPower = Math.max(-0.7, Math.min(0.7, turnPower));
+            turnPower = Math.max(-1, Math.min(1, turnPower));
 
             // Apply power to rotate the robot
             frontLeft.setPower(turnPower);
