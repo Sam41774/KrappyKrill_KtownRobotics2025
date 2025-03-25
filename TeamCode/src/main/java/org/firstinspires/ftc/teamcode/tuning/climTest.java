@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode.tuning;
 
 import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.linearOpMode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.Trajectory;
 import com.acmerobotics.roadrunner.Vector2d;
@@ -26,10 +27,21 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 
+
+
+
+
+
 @Autonomous (name = "climylim")
 public final class climTest extends LinearOpMode{
     @Override
+
+
     public void runOpMode() throws InterruptedException{
+
+        int pos1 = 40;
+
+
         Claw claw = new Claw(
                 hardwareMap.get(Servo.class, "claw")
         );
@@ -59,7 +71,9 @@ public final class climTest extends LinearOpMode{
 
 
 
-        Pose2d startPose = new Pose2d(72,-9,0);
+        Pose2d startPose = new Pose2d(-18,-69,0);
+
+
 
 
         if (TuningOpModes.DRIVE_CLASS.equals(MecanumDrive.class)) {
@@ -69,9 +83,10 @@ public final class climTest extends LinearOpMode{
 
             Actions.runBlocking(
                     drive.actionBuilder(startPose)
-                            .splineTo(new Vector2d(19, 9), Math.toRadians(90))
-                            .splineTo(new Vector2d(54, 54), Math.toRadians(135))
+                            .splineTo(new Vector2d(-pos1, -pos1), Math.toRadians(45))
                             .build());
+
+
             /*inTakeArm.goDown();
             horzSlide.goOut();
             spinner.takeIn();
@@ -89,30 +104,13 @@ public final class climTest extends LinearOpMode{
 
 
 
-        } else if (TuningOpModes.DRIVE_CLASS.equals(TankDrive.class)) {
-            TankDrive drive = new TankDrive(hardwareMap, startPose);
-
-            waitForStart();
-
-            Actions.runBlocking(
-                    drive.actionBuilder(startPose)
-                            .splineTo(new Vector2d(19, 9), Math.toRadians(0))
-                            .splineTo(new Vector2d(54, 54), Math.toRadians(135))
-                            .build());
-            /*inTakeArm.goDown();
-            horzSlide.goOut();
-            spinner.takeIn();
-            horzSlide.goIn();
-            vertSlide.runToMin();
-            shoulder.inTakePosition();
-            spinner.stop();
-            claw.close();
-            vertSlide.runToMax();
-            shoulder.outTakePosition();
-            claw.open();*/
         } else {
             throw new RuntimeException();
         }
+
+
+
+        requestOpModeStop();
 
 
         /*

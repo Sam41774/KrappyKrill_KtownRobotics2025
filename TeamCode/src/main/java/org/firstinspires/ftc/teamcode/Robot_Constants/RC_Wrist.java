@@ -4,8 +4,8 @@ import com.acmerobotics.dashboard.config.Config;
 
 @Config
 public class RC_Wrist {
-    public static double inTake = 0.7;
-    public static double clip = .9;
+    public static double inTake = 0.2;
+    public static double clip = .5;
     public static double outTake = 0.6;
     public static double bar = 0.5;
 }

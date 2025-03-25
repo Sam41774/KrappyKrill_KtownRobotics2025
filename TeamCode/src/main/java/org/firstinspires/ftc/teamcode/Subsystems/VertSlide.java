@@ -113,4 +113,23 @@ public class VertSlide {
         // Update telemetry.
         TelemetryData.slideCount = left.getCurrentPosition();
     }
+
+    public void climb(){
+        left.setTargetPosition(RC_VertSlide.climbPosition);
+        right.setTargetPosition(RC_VertSlide.climbPosition);
+
+        // Switch to RUN_TO_POSITION mode so that the motors will move to (or hold) the target.
+        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+        // Determine the power to use.
+        // When there is active input, use the magnitude of that input;
+        // when holding (no input) use a small constant power.
+        double appliedPower = 1.0;
+        left.setPower(appliedPower);
+        right.setPower(appliedPower);
+
+        // Update telemetry.
+        TelemetryData.slideCount = left.getCurrentPosition();
+    }
 }

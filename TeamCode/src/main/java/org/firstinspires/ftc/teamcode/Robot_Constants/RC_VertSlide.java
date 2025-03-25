@@ -7,6 +7,8 @@ public class RC_VertSlide {
 
     public static int maxPosition = 3080;
     public static int minPosition = 0;
+
+    public static int climbPosition = 2200;
     public static double holdPower = 0.1;
     public static  double POSITION_SCALE_FACTOR = 20.0;
 }
