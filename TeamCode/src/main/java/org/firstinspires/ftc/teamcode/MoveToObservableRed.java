@@ -22,8 +22,8 @@ public class MoveToObservableRed extends LinearOpMode {
 
     // These constants are based on the motor and wheel setup.
     // Adjust COUNTS_PER_MOTOR_REV if your motors differ.
-    static final double COUNTS_PER_MOTOR_REV = 28;    // e.g., TETRIX Motor Encoder
-    static final double DRIVE_GEAR_REDUCTION = 15.0;       // No External Gearing.
+    static final double COUNTS_PER_MOTOR_REV = 28;
+    static final double DRIVE_GEAR_REDUCTION = 15.0;       //3 * 5 = 15 for those lil gear box things
     static final double WHEEL_DIAMETER_INCHES = 4.0;      // For calculating circumference.
     static final double COUNTS_PER_INCH = (COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
             (WHEEL_DIAMETER_INCHES * Math.PI);
@@ -153,7 +153,7 @@ public class MoveToObservableRed extends LinearOpMode {
             leftBack.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             rightBack.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
 
-            sleep(250);  // Optional pause between moves.
+            //sleep(250);  // Optional pause between moves.
         }
     }
 }
