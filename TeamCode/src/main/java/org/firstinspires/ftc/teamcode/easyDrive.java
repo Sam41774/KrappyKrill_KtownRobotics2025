@@ -28,7 +28,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
 
 @TeleOp(name = "KRILLYTELLY")
-public class KrillyTeleop25 extends LinearOpMode {
+public class easyDrive extends LinearOpMode {
 
 
 
@@ -193,11 +193,6 @@ public class KrillyTeleop25 extends LinearOpMode {
             if(gamepad1.options){
                 driveTrain.resetHeading();
             }
-
-            if(gamepad1.a){
-                vertSlide.climb();
-            }
-
 
             driveTrain.drive(left_y, left_x, right_x);
 
