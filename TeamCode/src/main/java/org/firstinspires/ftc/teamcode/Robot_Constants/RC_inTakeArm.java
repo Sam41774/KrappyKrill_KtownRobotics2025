@@ -6,11 +6,11 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 @Config
 public class RC_inTakeArm {
 
-    public static int minCount = 200;
-    public static int maxCount = 460;
+    public static int minCount = 220;
+    public static int maxCount = 440;
     public static int storePosition = 10;
-    public static double power = 0.8;
-    public static DcMotorSimple.Direction direction = DcMotorSimple.Direction.FORWARD;
+    public static double power = 0.5;
+    public static DcMotorSimple.Direction direction = DcMotorSimple.Direction.REVERSE;
 
 
 

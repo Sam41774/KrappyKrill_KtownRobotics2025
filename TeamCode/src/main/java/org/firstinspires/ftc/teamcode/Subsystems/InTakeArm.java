@@ -28,6 +28,10 @@ public class InTakeArm {
             this.motor.setPower(RC_inTakeArm.power);
         }
         else if(this.motor.getCurrentPosition() <= RC_inTakeArm.minCount) {
+            int position = this.motor.getCurrentPosition();
+            this.motor.setTargetPosition(RC_inTakeArm.minCount);
+            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.motor.setPower(RC_inTakeArm.power);
             TelemetryData.inTakeArmPosition = 1;
 
         }

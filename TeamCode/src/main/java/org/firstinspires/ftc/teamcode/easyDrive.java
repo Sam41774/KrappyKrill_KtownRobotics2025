@@ -65,8 +65,7 @@ public class easyDrive extends LinearOpMode {
                 hardwareMap.get(DcMotorEx.class, "intakeMotor")
         );
         Spinner spinner = new Spinner(
-                hardwareMap.get(CRServo.class, "left"),
-                hardwareMap.get(CRServo.class, "right"),
+                hardwareMap.get(DcMotorEx.class, "spinnerMotor"),
                 hardwareMap.get(CRServo.class,"top")
         );
         Wrist wrist = new Wrist(

@@ -16,26 +16,14 @@ public class HorzSlide {
     }
 
     public void goIn(){
-        if (this.left.getPosition() > RC_HorzSlide.inLeft){
-            double Lposition = this.left.getPosition();
-            double Rposition = 1-Lposition;
-            this.left.setPosition(RC_HorzSlide.inLeft);
-            this.right.setPosition(RC_HorzSlide.inRight);
-        }
-        else if(this.left.getPosition() <= RC_HorzSlide.inLeft) {
-            TelemetryData.horzSlidePosition = 0;
-        }
+        this.left.setPosition(RC_HorzSlide.inLeft);
+        this.right.setPosition(RC_HorzSlide.inRight);
+        TelemetryData.horzSlidePosition = 0;
     }
 
     public void goOut(){
-        if (this.left.getPosition() < RC_HorzSlide.outLeft){
-            double Lposition = this.left.getPosition();
-            double Rposition = 1-Lposition;
-            this.left.setPosition(RC_HorzSlide.outLeft);
-            this.right.setPosition(RC_HorzSlide.outRight);
-        }
-        else if(this.left.getPosition() <= RC_HorzSlide.outLeft) {
-            TelemetryData.horzSlidePosition = 1;
-        }
+        this.left.setPosition(RC_HorzSlide.outLeft);
+        this.right.setPosition(RC_HorzSlide.outRight);
+        TelemetryData.horzSlidePosition = 1;
     }
 }

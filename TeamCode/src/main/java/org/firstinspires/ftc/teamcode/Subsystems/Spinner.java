@@ -1,40 +1,50 @@
 package org.firstinspires.ftc.teamcode.Subsystems;
 
 import com.qualcomm.robotcore.hardware.CRServo;
+import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorEx;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import org.firstinspires.ftc.teamcode.Robot_Constants.RC_Claw;
 import org.firstinspires.ftc.teamcode.Robot_Constants.RC_Spinner;
 import org.firstinspires.ftc.teamcode.Robot_Constants.TelemetryData;
 
 public class Spinner {
-    private CRServo left;
-    private CRServo right;
+
+    private DcMotorEx motor;
     private CRServo top;
 
-    public Spinner(CRServo L, CRServo R, CRServo T){
-        this.left = L;
-        this.right = R;
+    public Spinner(DcMotorEx M, CRServo T){
+        this.motor = M;
         this.top = T;
+
+        this.motor.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        this.motor.setDirection(DcMotorSimple.Direction.REVERSE);
+        this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
     }
 
     public void takeIn(){
-        this.left.setPower(RC_Spinner.leftInMax);
-        this.right.setPower(RC_Spinner.rightInMax);
+
+        this.motor.setPower(RC_Spinner.motorInMax);
         this.top.setPower(RC_Spinner.topInMax);
+
         TelemetryData.spinnerMode=1;
     }
 
     public void takeOut(){
-        this.left.setPower(RC_Spinner.leftOutMax);
-        this.right.setPower(RC_Spinner.rightOutMax);
+
+        this.motor.setPower(RC_Spinner.motorOutMax);
         this.top.setPower(RC_Spinner.topOutMax);
+
         TelemetryData.spinnerMode=2;
     }
 
     public void stop(){
-        this.left.setPower(0);
-        this.right.setPower(0);
+
+        this.motor.setPower(0);
         this.top.setPower(0);
+
         TelemetryData.spinnerMode=0;
     }
 
