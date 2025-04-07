@@ -77,8 +77,10 @@ public class KrillyTeleop25 extends LinearOpMode {
             double right_y = zeroAnalogInput(currentGamepad1.right_stick_y);
             double left_x = zeroAnalogInput(currentGamepad1.left_stick_x);
             double right_x = zeroAnalogInput(currentGamepad1.right_stick_x);
+
             double left_t = zeroAnalogInput(currentGamepad2.left_trigger);
             double right_t = zeroAnalogInput(currentGamepad2.right_trigger);
+            double left_y2 = -zeroAnalogInput(currentGamepad2.left_stick_y);
 
 
 
@@ -113,6 +115,8 @@ public class KrillyTeleop25 extends LinearOpMode {
             } else if (currentGamepad2.dpad_down && !previousGamepad2.dpad_down) {
                 horzSlide.goIn();
             }
+
+            horzSlide.changePosition(left_y2);
 
             // Intake arm
             if (currentGamepad2.dpad_left && !previousGamepad2.dpad_left) {

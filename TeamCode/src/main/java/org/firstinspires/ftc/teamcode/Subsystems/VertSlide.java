@@ -47,7 +47,7 @@ public class VertSlide {
         // If there is input, update the target position based on the scaled trigger value.
         if (slidePowerInput != 0) {
             int positionIncrement = (int)(slidePowerInput * RC_VertSlide.POSITION_SCALE_FACTOR);
-            targetPosition += positionIncrement;
+            targetPosition += (int)(slidePowerInput*10.0);
         }
 
         // Clamp the target position to stay within allowed bounds.
