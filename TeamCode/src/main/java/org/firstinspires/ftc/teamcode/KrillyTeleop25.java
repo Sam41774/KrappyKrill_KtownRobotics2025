@@ -62,8 +62,6 @@ public class KrillyTeleop25 extends LinearOpMode {
         while (opModeIsActive()) {
             if (init) {
                 setStartingPosition(horzSlide,inTakeArm,claw,shoulder,wrist);
-
-
                 init = false;
             }
 
@@ -81,6 +79,7 @@ public class KrillyTeleop25 extends LinearOpMode {
             double left_t = zeroAnalogInput(currentGamepad2.left_trigger);
             double right_t = zeroAnalogInput(currentGamepad2.right_trigger);
             double left_y2 = -zeroAnalogInput(currentGamepad2.left_stick_y);
+            double right_y2 = zeroAnalogInput(currentGamepad2.right_stick_y);
 
 
 
@@ -124,6 +123,8 @@ public class KrillyTeleop25 extends LinearOpMode {
             } else if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right) {
                 inTakeArm.goUp();
             }
+
+            inTakeArm.changePosition(right_y2);
 
             // Spinner toggles
             if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {

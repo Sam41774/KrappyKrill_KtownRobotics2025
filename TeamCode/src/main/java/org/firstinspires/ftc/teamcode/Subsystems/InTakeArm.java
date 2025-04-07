@@ -4,6 +4,7 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
+import org.firstinspires.ftc.teamcode.Robot_Constants.RC_HorzSlide;
 import org.firstinspires.ftc.teamcode.Robot_Constants.RC_inTakeArm;
 import org.firstinspires.ftc.teamcode.Robot_Constants.TelemetryData;
 
@@ -11,7 +12,7 @@ public class InTakeArm {
     private DcMotorEx motor;
 
 
-    public InTakeArm(DcMotorEx m){
+    public InTakeArm(DcMotorEx m) {
         this.motor = m;
         this.motor.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
         this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -20,14 +21,13 @@ public class InTakeArm {
 
     }
 
-    public void goUp(){
-        if (this.motor.getCurrentPosition() > RC_inTakeArm.minCount){
+    public void goUp() {
+        if (this.motor.getCurrentPosition() > RC_inTakeArm.minCount) {
             int position = this.motor.getCurrentPosition();
             this.motor.setTargetPosition(RC_inTakeArm.minCount);
             this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.motor.setPower(RC_inTakeArm.power);
-        }
-        else if(this.motor.getCurrentPosition() <= RC_inTakeArm.minCount) {
+        } else if (this.motor.getCurrentPosition() <= RC_inTakeArm.minCount) {
             int position = this.motor.getCurrentPosition();
             this.motor.setTargetPosition(RC_inTakeArm.minCount);
             this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -39,17 +39,46 @@ public class InTakeArm {
         TelemetryData.inTakeArmCount = this.motor.getCurrentPosition();
     }
 
-    public void goDown(){
-        if (this.motor.getCurrentPosition() < RC_inTakeArm.maxCount){
+    public void goDown() {
+        if (this.motor.getCurrentPosition() < RC_inTakeArm.maxCount) {
             int position = this.motor.getCurrentPosition();
             this.motor.setTargetPosition(RC_inTakeArm.maxCount);
             this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.motor.setPower(RC_inTakeArm.power);
-        }
-        else if(this.motor.getCurrentPosition() >= RC_inTakeArm.maxCount) {
+        } else if (this.motor.getCurrentPosition() >= RC_inTakeArm.maxCount) {
+            int position = this.motor.getCurrentPosition();
+            this.motor.setTargetPosition(RC_inTakeArm.minCount);
+            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.motor.setPower(RC_inTakeArm.power);
             TelemetryData.inTakeArmPosition = 2;
         }
 
         TelemetryData.inTakeArmCount = this.motor.getCurrentPosition();
+    }
+
+    public void changePosition(double amount) {
+        int currPos = this.motor.getCurrentPosition();
+        int newAmount = (int)(amount*10);
+
+        if (newAmount > 0) {
+            if (currPos < RC_inTakeArm.maxCount) {
+                this.motor.setTargetPosition(currPos + newAmount);
+            } else {
+                this.motor.setTargetPosition(RC_inTakeArm.maxCount);
+            }
+            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.motor.setPower(RC_inTakeArm.power);
+        } else if (newAmount < 0) {
+            if (currPos > RC_inTakeArm.storePosition) {
+                this.motor.setTargetPosition(currPos + newAmount);
+            } else {
+                this.motor.setTargetPosition(RC_inTakeArm.storePosition);
+            }
+            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            this.motor.setPower(RC_inTakeArm.power);
+        }
+
+
+
     }
 }
