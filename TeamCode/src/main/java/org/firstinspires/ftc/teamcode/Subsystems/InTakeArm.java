@@ -58,13 +58,13 @@ public class InTakeArm {
 
     public void changePosition(double amount) {
         int currPos = this.motor.getCurrentPosition();
-        int newAmount = (int)(amount*10);
+        int newAmount = (int)(amount*30);
 
         if (newAmount > 0) {
-            if (currPos < RC_inTakeArm.maxCount) {
+            if (currPos < RC_inTakeArm.maxCount + 20) {
                 this.motor.setTargetPosition(currPos + newAmount);
             } else {
-                this.motor.setTargetPosition(RC_inTakeArm.maxCount);
+                this.motor.setTargetPosition(RC_inTakeArm.maxCount + 20);
             }
             this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
             this.motor.setPower(RC_inTakeArm.power);

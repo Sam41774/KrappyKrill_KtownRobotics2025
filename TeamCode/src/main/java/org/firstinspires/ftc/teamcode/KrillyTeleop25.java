@@ -127,7 +127,7 @@ public class KrillyTeleop25 extends LinearOpMode {
             inTakeArm.changePosition(right_y2);
 
             // Spinner toggles
-            if (currentGamepad2.right_bumper && !previousGamepad2.right_bumper) {
+            if (currentGamepad2.right_bumper) {
                 if (TelemetryData.spinnerMode != 1) {
                     spinner.takeIn();
                 } else {
@@ -135,7 +135,7 @@ public class KrillyTeleop25 extends LinearOpMode {
                 }
             }
 
-            if (currentGamepad2.left_bumper && !previousGamepad2.left_bumper) {
+            if (currentGamepad2.left_bumper) {
                 if (TelemetryData.spinnerMode != 2) {
                     spinner.takeOut();
                 } else {
