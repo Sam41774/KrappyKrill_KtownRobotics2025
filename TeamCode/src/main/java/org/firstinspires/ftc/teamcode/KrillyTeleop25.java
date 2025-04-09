@@ -127,25 +127,23 @@ public class KrillyTeleop25 extends LinearOpMode {
             inTakeArm.changePosition(right_y2);
 
             // Spinner toggles
+            // also for some goddam reason the out and in are reveresed so takeIn() actualy goes out
             if (currentGamepad2.right_bumper) {
-                if (TelemetryData.spinnerMode != 1) {
-                    spinner.takeIn();
-                } else {
-                    spinner.stop();
-                }
+                spinner.takeOut();
             }
-
-            if (currentGamepad2.left_bumper) {
-                if (TelemetryData.spinnerMode != 2) {
-                    spinner.takeOut();
-                } else {
-                    spinner.stop();
-                }
+            else if (currentGamepad2.left_bumper) {
+                spinner.takeIn();
+            }
+            else{
+                spinner.stop();
             }
 
             // Vertical slide
             if (right_t > 0.1 || left_t > 0.1) {
                 vertSlide.setPower(right_t,left_t);
+            }
+            else {
+                vertSlide.setPower(0,0);
             }
 
             if (currentGamepad2.share && !previousGamepad2.share){

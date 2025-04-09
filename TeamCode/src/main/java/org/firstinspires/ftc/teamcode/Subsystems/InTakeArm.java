@@ -58,7 +58,7 @@ public class InTakeArm {
 
     public void changePosition(double amount) {
         int currPos = this.motor.getCurrentPosition();
-        int newAmount = (int)(amount*30);
+        int newAmount = (int)(amount*10);
 
         if (newAmount > 0) {
             if (currPos < RC_inTakeArm.maxCount + 20) {

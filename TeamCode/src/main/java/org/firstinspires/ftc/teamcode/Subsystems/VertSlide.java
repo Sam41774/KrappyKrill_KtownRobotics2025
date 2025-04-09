@@ -9,10 +9,12 @@ public class VertSlide {
     private DcMotor left;
     private DcMotor right;
 
-    // Store the target encoder position for the slides.
-    private int targetPosition;
+    private boolean isLeftHolding = false;
+    private boolean isRightHolding = false;
+    private int leftHoldPosition = 0;
+    private int rightHoldPosition = 0;
 
-    public VertSlide(DcMotor L, DcMotor R){
+    public VertSlide(DcMotor L, DcMotor R) {
         left = L;
         right = R;
 
@@ -26,110 +28,123 @@ public class VertSlide {
 
         left.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         right.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Initialize the target position to the current encoder reading.
-        targetPosition = left.getCurrentPosition();
     }
 
-    /**
-     * Update the vertical slide's position using trigger inputs.
-     * When the triggers are pressed, the target encoder position is updated,
-     * and the motor mode is set to RUN_TO_POSITION so that the slide actively
-     * holds the new position.
-     *
-     * @param rightTrigger positive input (e.g., raising the slide)
-     * @param leftTrigger  positive input (e.g., lowering the slide)
-     */
-    public void setPower(double rightTrigger, double leftTrigger){
+    public void setPower(double rightTrigger, double leftTrigger) {
         double slidePowerInput = rightTrigger - leftTrigger;
-        int currentPosition = left.getCurrentPosition();
 
-        // If there is input, update the target position based on the scaled trigger value.
+        int leftCurrent = left.getCurrentPosition();
+        int rightCurrent = right.getCurrentPosition();
+
+        // --- Movement ---
         if (slidePowerInput != 0) {
-            int positionIncrement = (int)(slidePowerInput * RC_VertSlide.POSITION_SCALE_FACTOR);
-            targetPosition += currentPosition + positionIncrement;
+            isLeftHolding = false;
+            isRightHolding = false;
+
+            // Cancel any holding mode
+            left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            right.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+
+            // Soft limit scaling
+            double leftScale = 1.0;
+            double rightScale = 1.0;
+            int slowZone = 200;
+
+            int leftDistToMin = leftCurrent - RC_VertSlide.minPosition;
+            int leftDistToMax = RC_VertSlide.maxPosition - leftCurrent;
+
+            int rightDistToMin = rightCurrent - RC_VertSlide.minPosition;
+            int rightDistToMax = RC_VertSlide.maxPosition - rightCurrent;
+
+            if (slidePowerInput < 0 && leftDistToMin < slowZone) {
+                leftScale = Math.max(0, (double) leftDistToMin / slowZone);
+            } else if (slidePowerInput > 0 && leftDistToMax < slowZone) {
+                leftScale = Math.max(0, (double) leftDistToMax / slowZone);
+            }
+
+            if (slidePowerInput < 0 && rightDistToMin < slowZone) {
+                rightScale = Math.max(0, (double) rightDistToMin / slowZone);
+            } else if (slidePowerInput > 0 && rightDistToMax < slowZone) {
+                rightScale = Math.max(0, (double) rightDistToMax / slowZone);
+            }
+
+            double leftPower = Math.max(-1.0, Math.min(1.0, slidePowerInput * leftScale));
+            double rightPower = Math.max(-1.0, Math.min(1.0, slidePowerInput * rightScale));
+
+            left.setPower(leftPower);
+            right.setPower(rightPower);
+        }
+        // --- Holding (independent) ---
+        else {
+            if (!left.isBusy()) {
+                if (!isLeftHolding) {
+                    leftHoldPosition = leftCurrent;
+                    isLeftHolding = true;
+                }
+                left.setTargetPosition(leftHoldPosition);
+                left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                left.setPower(RC_VertSlide.holdPower);
+            }
+
+            if (!right.isBusy()) {
+                if (!isRightHolding) {
+                    rightHoldPosition = rightCurrent;
+                    isRightHolding = true;
+                }
+                right.setTargetPosition(rightHoldPosition);
+                right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                right.setPower(RC_VertSlide.holdPower);
+            }
         }
 
-        // Clamp the target position to stay within allowed bounds.
-        if (targetPosition > RC_VertSlide.maxPosition) {
-            targetPosition = RC_VertSlide.maxPosition;
-        } else if (targetPosition < RC_VertSlide.minPosition) {
-            targetPosition = RC_VertSlide.minPosition;
-        }
-
-        // Set the target position for both motors.
-        left.setTargetPosition(targetPosition);
-        right.setTargetPosition(targetPosition);
-
-        // Switch to RUN_TO_POSITION mode so that the motors will move to (or hold) the target.
-        left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        // Determine the power to use.
-        // When there is active input, use the magnitude of that input;
-        // when holding (no input) use a small constant power.
-        double appliedPower = (slidePowerInput != 0) ? Math.abs(slidePowerInput) : RC_VertSlide.holdPower;
-        left.setPower(appliedPower);
-        right.setPower(appliedPower);
-
-        // Update telemetry.
-        TelemetryData.slideCount = left.getCurrentPosition();
+        TelemetryData.slideCount = leftCurrent;
     }
 
-    public void runToMax(){
+    public void runToMax() {
         left.setTargetPosition(RC_VertSlide.maxPosition);
         right.setTargetPosition(RC_VertSlide.maxPosition);
 
-        // Switch to RUN_TO_POSITION mode so that the motors will move to (or hold) the target.
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // Determine the power to use.
-        // When there is active input, use the magnitude of that input;
-        // when holding (no input) use a small constant power.
-        double appliedPower = 1.0;
-        left.setPower(appliedPower);
-        right.setPower(appliedPower);
+        left.setPower(1.0);
+        right.setPower(1.0);
 
-        // Update telemetry.
+        isLeftHolding = false;
+        isRightHolding = false;
+
         TelemetryData.slideCount = left.getCurrentPosition();
     }
 
-    public void runToMin(){
+    public void runToMin() {
         left.setTargetPosition(RC_VertSlide.minPosition);
         right.setTargetPosition(RC_VertSlide.minPosition);
 
-        // Switch to RUN_TO_POSITION mode so that the motors will move to (or hold) the target.
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // Determine the power to use.
-        // When there is active input, use the magnitude of that input;
-        // when holding (no input) use a small constant power.
-        double appliedPower = 1.0;
-        left.setPower(appliedPower);
-        right.setPower(appliedPower);
+        left.setPower(1.0);
+        right.setPower(1.0);
 
-        // Update telemetry.
+        isLeftHolding = false;
+        isRightHolding = false;
+
         TelemetryData.slideCount = left.getCurrentPosition();
     }
 
-    public void climb(){
+    public void climb() {
         left.setTargetPosition(RC_VertSlide.climbPosition);
         right.setTargetPosition(RC_VertSlide.climbPosition);
 
-        // Switch to RUN_TO_POSITION mode so that the motors will move to (or hold) the target.
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
-        // Determine the power to use.
-        // When there is active input, use the magnitude of that input;
-        // when holding (no input) use a small constant power.
-        double appliedPower = 1.0;
-        left.setPower(appliedPower);
-        right.setPower(appliedPower);
+        left.setPower(1.0);
+        right.setPower(1.0);
 
-        // Update telemetry.
+        isLeftHolding = false;
+        isRightHolding = false;
+
         TelemetryData.slideCount = left.getCurrentPosition();
     }
 }
