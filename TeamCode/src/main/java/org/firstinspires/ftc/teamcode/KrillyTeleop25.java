@@ -11,6 +11,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 
+import org.firstinspires.ftc.teamcode.Robot_Constants.RC_Claw;
 import org.firstinspires.ftc.teamcode.Robot_Constants.TelemetryData;
 import org.firstinspires.ftc.teamcode.Subsystems.*;
 
@@ -123,8 +124,9 @@ public class KrillyTeleop25 extends LinearOpMode {
             } else if (currentGamepad2.dpad_right && !previousGamepad2.dpad_right) {
                 inTakeArm.goUp();
             }
-
-            inTakeArm.changePosition(right_y2);
+            else if (right_y2 != 0){
+                inTakeArm.changePosition(right_y2);
+            }
 
             // Spinner toggles
             // also for some goddam reason the out and in are reveresed so takeIn() actualy goes out
@@ -165,7 +167,14 @@ public class KrillyTeleop25 extends LinearOpMode {
                 vertSlide.climb();
             }
 
-            driveTrain.drive(left_y, left_x, right_x);
+
+
+            // Speed toggle (half speed if holding left bumper)
+            double speedMultiplier = currentGamepad1.left_bumper ? RC_Claw.slowDrive : 1.0;
+
+            // Driving with scaled speed
+            driveTrain.drive(left_y * speedMultiplier, left_x * speedMultiplier, right_x * speedMultiplier);
+
 
             telemetry.addData("motor Position", TelemetryData.inTakeArmCount);
             telemetry.update();

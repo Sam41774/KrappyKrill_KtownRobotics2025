@@ -4,13 +4,14 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 
-import org.firstinspires.ftc.teamcode.Robot_Constants.RC_HorzSlide;
 import org.firstinspires.ftc.teamcode.Robot_Constants.RC_inTakeArm;
 import org.firstinspires.ftc.teamcode.Robot_Constants.TelemetryData;
 
 public class InTakeArm {
     private DcMotorEx motor;
 
+    private boolean isHolding = false;
+    private int holdPosition = 0;
 
     public InTakeArm(DcMotorEx m) {
         this.motor = m;
@@ -18,67 +19,52 @@ public class InTakeArm {
         this.motor.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         this.motor.setDirection(RC_inTakeArm.direction);
         this.motor.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
     }
 
     public void goUp() {
-        if (this.motor.getCurrentPosition() > RC_inTakeArm.minCount) {
-            int position = this.motor.getCurrentPosition();
-            this.motor.setTargetPosition(RC_inTakeArm.minCount);
-            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.motor.setPower(RC_inTakeArm.power);
-        } else if (this.motor.getCurrentPosition() <= RC_inTakeArm.minCount) {
-            int position = this.motor.getCurrentPosition();
-            this.motor.setTargetPosition(RC_inTakeArm.minCount);
-            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.motor.setPower(RC_inTakeArm.power);
-            TelemetryData.inTakeArmPosition = 1;
+        motor.setTargetPosition(RC_inTakeArm.minCount);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(RC_inTakeArm.power);
+        isHolding = false;
 
-        }
-
-        TelemetryData.inTakeArmCount = this.motor.getCurrentPosition();
+        TelemetryData.inTakeArmCount = motor.getCurrentPosition();
     }
 
     public void goDown() {
-        if (this.motor.getCurrentPosition() < RC_inTakeArm.maxCount) {
-            int position = this.motor.getCurrentPosition();
-            this.motor.setTargetPosition(RC_inTakeArm.maxCount);
-            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.motor.setPower(RC_inTakeArm.power);
-        } else if (this.motor.getCurrentPosition() >= RC_inTakeArm.maxCount) {
-            int position = this.motor.getCurrentPosition();
-            this.motor.setTargetPosition(RC_inTakeArm.minCount);
-            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.motor.setPower(RC_inTakeArm.power);
-            TelemetryData.inTakeArmPosition = 2;
-        }
+        motor.setTargetPosition(RC_inTakeArm.maxCount);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(RC_inTakeArm.power);
+        isHolding = false;
 
-        TelemetryData.inTakeArmCount = this.motor.getCurrentPosition();
+        TelemetryData.inTakeArmCount = motor.getCurrentPosition();
     }
 
     public void changePosition(double amount) {
-        int currPos = this.motor.getCurrentPosition();
-        int newAmount = (int)(amount*10);
+        int currPos = motor.getCurrentPosition();
+        int increment = (int)(amount * 10);  // fine-tune this multiplier for sensitivity
 
-        if (newAmount > 0) {
-            if (currPos < RC_inTakeArm.maxCount + 20) {
-                this.motor.setTargetPosition(currPos + newAmount);
-            } else {
-                this.motor.setTargetPosition(RC_inTakeArm.maxCount + 20);
+        if (increment != 0) {
+            int newTarget = currPos + increment;
+
+            // Clamp target within safe range
+            newTarget = Math.max(RC_inTakeArm.storePosition, Math.min(RC_inTakeArm.maxCount + 20, newTarget));
+
+            motor.setTargetPosition(newTarget);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(RC_inTakeArm.power);
+            isHolding = false;
+        } else if (!motor.isBusy()) {
+            // --- Auto-hold when idle and no new input ---
+            if (!isHolding) {
+                holdPosition = currPos;
+                isHolding = true;
             }
-            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.motor.setPower(RC_inTakeArm.power);
-        } else if (newAmount < 0) {
-            if (currPos > RC_inTakeArm.storePosition) {
-                this.motor.setTargetPosition(currPos + newAmount);
-            } else {
-                this.motor.setTargetPosition(RC_inTakeArm.storePosition);
-            }
-            this.motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-            this.motor.setPower(RC_inTakeArm.power);
+
+            motor.setTargetPosition(holdPosition);
+            motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+            motor.setPower(RC_inTakeArm.holdPower);  // Add this to RC_inTakeArm
         }
 
-
-
+        TelemetryData.inTakeArmCount = motor.getCurrentPosition();
     }
 }
