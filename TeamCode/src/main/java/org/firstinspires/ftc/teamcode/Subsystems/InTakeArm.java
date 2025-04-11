@@ -39,6 +39,15 @@ public class InTakeArm {
         TelemetryData.inTakeArmCount = motor.getCurrentPosition();
     }
 
+    public void store() {
+        motor.setTargetPosition(0);
+        motor.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        motor.setPower(RC_inTakeArm.power);
+        isHolding = false;
+
+        TelemetryData.inTakeArmCount = motor.getCurrentPosition();
+    }
+
     public void changePosition(double amount) {
         int currPos = motor.getCurrentPosition();
         int increment = (int)(amount * 10);  // fine-tune this multiplier for sensitivity
