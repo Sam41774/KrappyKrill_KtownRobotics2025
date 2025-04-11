@@ -37,8 +37,7 @@ public class MoveToObservableRed extends LinearOpMode {
     static final double DRIVE_GEAR_REDUCTION = 15.0;       //3 * 5 = 15 for those gearboxes
     static final double WHEEL_DIAMETER_INCHES = 4.094;      // For calculating circumference.
     // Added 2.5% correction to account for consistent overshoot.
-    static final double COUNTS_PER_INCH = ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) /
-            (WHEEL_DIAMETER_INCHES * Math.PI)) * 1.025;
+    static final double COUNTS_PER_INCH = 32.1094890; //((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI)) * 1.025;
     static final double DRIVE_SPEED = 0.3;
 
     static final double TURN_SPEED = 0.5;
@@ -111,10 +110,9 @@ public class MoveToObservableRed extends LinearOpMode {
         // Use improved encoder drive with deceleration to prevent overshooting.
         encoderDrive(DRIVE_SPEED, 48, 48, 5.0, imu);
 
-        // Uncomment to test fast PID rotation.
-        fastPidRotate(-90, 3.0, imu);
+        /*
 
-        // Other actions can follow here (e.g., additional drive, spinner actions, etc.)
+        fastPidRotate(-90, 3.0, imu);
 
         encoderDrive(DRIVE_SPEED, 16, 16,90.0, 5.0, imu);
 
@@ -149,6 +147,9 @@ public class MoveToObservableRed extends LinearOpMode {
         vertSlide.runToMin();
 
         inTakeArm.store();
+
+        */
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
@@ -313,7 +314,7 @@ public class MoveToObservableRed extends LinearOpMode {
                     imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
             // Use an offset (e.g., 0.75 inch) to reduce commanded distance for momentum overshoot.
-            double offsetInches = 3;
+            double offsetInches = 0;
 
             newLeftFrontTarget = leftFront.getCurrentPosition() + (int)((leftInches - offsetInches) * COUNTS_PER_INCH);
             newRightFrontTarget = rightFront.getCurrentPosition() + (int)((rightInches - offsetInches) * COUNTS_PER_INCH);
