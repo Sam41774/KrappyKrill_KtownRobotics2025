@@ -38,6 +38,7 @@ public class MoveToObservableRed extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 4.094;      // For calculating circumference.
     // Added 2.5% correction to account for consistent overshoot.
     static final double COUNTS_PER_INCH = 32.1094890; //((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI)) * 1.025;
+    static final double COUNTS_PER_INCH_STRAFE = 29.06746 * 1.2307;
     static final double DRIVE_SPEED = 0.3;
 
     static final double TURN_SPEED = 0.5;
@@ -108,7 +109,9 @@ public class MoveToObservableRed extends LinearOpMode {
         setStartingPosition(horzSlide, inTakeArm, claw, shoulder, wrist);
 
         // Use improved encoder drive with deceleration to prevent overshooting.
-        encoderDrive(DRIVE_SPEED, 48, 48, 5.0, imu);
+        //encoderDrive(DRIVE_SPEED, 48, 48, 5.0, imu);
+
+        encoderStrafe(DRIVE_SPEED,16,90.0, 5, imu);
 
         /*
 
@@ -454,16 +457,16 @@ public class MoveToObservableRed extends LinearOpMode {
 
             // Adjustment to correct for minor bias.
             int adjust = (inches < 0) ? -1 : (inches > 0 ? 1 : 0);
-            double backAdjust = 3; // Extra factor for the back motors.
+            double backAdjust = 0; // Extra factor for the back motors.
 
             // Apply an offset to counter momentum (0.75 inch).
-            double offsetInches = 0.75;
+            double offsetInches = 0.0;
             double effectiveInches = (inches > 0) ? inches - offsetInches : inches + offsetInches;
 
-            newLeftFrontTarget = leftFront.getCurrentPosition() + (int)((effectiveInches + adjust) * COUNTS_PER_INCH);
-            newRightFrontTarget = rightFront.getCurrentPosition() - (int)((effectiveInches + adjust) * COUNTS_PER_INCH);
-            newLeftBackTarget  = leftBack.getCurrentPosition() - (int)((effectiveInches + adjust * backAdjust) * COUNTS_PER_INCH);
-            newRightBackTarget = rightBack.getCurrentPosition() + (int)((effectiveInches + adjust * backAdjust) * COUNTS_PER_INCH);
+            newLeftFrontTarget = leftFront.getCurrentPosition() + (int)((effectiveInches + adjust) * COUNTS_PER_INCH_STRAFE);
+            newRightFrontTarget = rightFront.getCurrentPosition() - (int)((effectiveInches + adjust) * COUNTS_PER_INCH_STRAFE);
+            newLeftBackTarget  = leftBack.getCurrentPosition() - (int)((effectiveInches + adjust * backAdjust) * COUNTS_PER_INCH_STRAFE);
+            newRightBackTarget = rightBack.getCurrentPosition() + (int)((effectiveInches + adjust * backAdjust) * COUNTS_PER_INCH_STRAFE);
 
             leftFront.setTargetPosition(newLeftFrontTarget);
             rightFront.setTargetPosition(newRightFrontTarget);

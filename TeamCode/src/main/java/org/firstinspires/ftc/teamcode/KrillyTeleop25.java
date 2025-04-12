@@ -100,8 +100,15 @@ public class KrillyTeleop25 extends LinearOpMode {
             }
 
             if (currentGamepad2.x && !previousGamepad2.x) {
-                shoulder.clipPosition();
-                wrist.clip();
+                if (TelemetryData.wristPosition == 1 || TelemetryData.wristPosition == 2 || TelemetryData.wristPosition == 5 || TelemetryData.wristPosition == 4){
+                    shoulder.clipInTakePosition();
+                    wrist.clipInTake();
+                }
+                else if (TelemetryData.wristPosition == 3){
+                    shoulder.clipOutTakePosition();
+                    wrist.clipOutTake();
+                }
+
             }
 
             if (currentGamepad2.y && !previousGamepad2.y) {

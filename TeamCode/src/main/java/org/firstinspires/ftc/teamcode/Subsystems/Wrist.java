@@ -17,9 +17,14 @@ public class Wrist {
         TelemetryData.wristPosition = 1;
     }
 
-    public void clip(){
-        this.servo.setPosition(RC_Wrist.clip);
+    public void clipInTake(){
+        this.servo.setPosition(RC_Wrist.clipInTake);
         TelemetryData.wristPosition = 3;
+    }
+
+    public void clipOutTake(){
+        this.servo.setPosition(RC_Wrist.clipOutTake);
+        TelemetryData.wristPosition = 4;
     }
 
     public void outTake(){
@@ -29,7 +34,7 @@ public class Wrist {
 
     public void touchBar(){
         this.servo.setPosition(RC_Wrist.bar);
-        TelemetryData.wristPosition = 3;
+        TelemetryData.wristPosition = 5;
     }
 
 }

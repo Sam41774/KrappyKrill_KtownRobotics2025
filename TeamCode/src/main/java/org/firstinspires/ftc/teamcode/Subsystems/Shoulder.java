@@ -25,10 +25,16 @@ public class Shoulder {
         TelemetryData.shoulderPosition = 1;
     }
 
-    public void clipPosition(){
+    public void clipInTakePosition(){
         this.left.setPosition(RC_Shoulder.clipLeft);
         this.right.setPosition(RC_Shoulder.clipRight);
         TelemetryData.shoulderPosition = 2;
+    }
+
+    public void clipOutTakePosition(){
+        this.left.setPosition(RC_Shoulder.clipOutLeft);
+        this.right.setPosition(RC_Shoulder.clipOutRight);
+        TelemetryData.shoulderPosition = 4;
     }
 
     public void touchBar(){
