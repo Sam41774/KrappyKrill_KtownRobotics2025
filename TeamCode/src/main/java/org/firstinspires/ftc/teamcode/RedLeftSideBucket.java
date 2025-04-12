@@ -140,21 +140,41 @@ public class RedLeftSideBucket extends LinearOpMode {
 
         horzSlide.goIn();
 
-        sleep(2000);
+        sleep(1000);
 
         claw.close();
 
-        fastPidRotate(-45.0, 5.0, imu);
+        fastPidRotate(-38.0, 5.0, imu);
 
-        sleep(2000);
-
-        encoderStrafe(DRIVE_SPEED, -24.0, -45.0, 5.0, imu);
+        //sleep(2000);
 
         vertSlide.runToMax();
 
         shoulder.outTakePosition();
 
-        sleep(2000);
+
+        encoderStrafe(DRIVE_SPEED, -10.0, 0.0, 5.0, imu);
+
+        sleep(100);
+
+        fastPidRotate(-45.0, 5.0, imu);
+
+        sleep(100);
+
+        encoderDrive(DRIVE_SPEED,-12,-12,-45.0,5.0,imu);
+
+        sleep(100);
+
+
+        //sleep(2000);
+
+        encoderDrive(DRIVE_SPEED,-5,-5,-45.0, 5.0,imu);
+
+        sleep(100);
+
+        claw.open();
+
+        sleep(5000);
 
 
 
