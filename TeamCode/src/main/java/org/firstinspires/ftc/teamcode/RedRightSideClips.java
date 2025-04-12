@@ -1,5 +1,6 @@
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.config.Config;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,8 +21,9 @@ import org.firstinspires.ftc.teamcode.Subsystems.Spinner;
 import org.firstinspires.ftc.teamcode.Subsystems.VertSlide;
 import org.firstinspires.ftc.teamcode.Subsystems.Wrist;
 
+@Config
 @Autonomous(name = "Krilly Auto Drive With Fast PID", group = "Robot")
-public class MoveToObservableRed extends LinearOpMode {
+public class RedRightSideClips extends LinearOpMode {
 
     // Define drive motors.
     private DcMotorEx leftFront = null;
@@ -38,7 +40,7 @@ public class MoveToObservableRed extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 4.094;      // For calculating circumference.
     // Added 2.5% correction to account for consistent overshoot.
     static final double COUNTS_PER_INCH = 32.1094890; //((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI)) * 1.025;
-    static final double COUNTS_PER_INCH_STRAFE = 29.06746 * 1.2307;
+    static final double COUNTS_PER_INCH_STRAFE = 29.06746; // * 1.2307;
     static final double DRIVE_SPEED = 0.3;
 
     static final double TURN_SPEED = 0.5;
@@ -109,9 +111,41 @@ public class MoveToObservableRed extends LinearOpMode {
         setStartingPosition(horzSlide, inTakeArm, claw, shoulder, wrist);
 
         // Use improved encoder drive with deceleration to prevent overshooting.
-        //encoderDrive(DRIVE_SPEED, 48, 48, 5.0, imu);
 
-        encoderStrafe(DRIVE_SPEED,16,90.0, 5, imu);
+
+        encoderDrive(DRIVE_SPEED, 16, 16,0.0, 5.0, imu);
+
+        encoderStrafe(DRIVE_SPEED,14,0.0, 5.0, imu);
+
+        encoderDrive(DRIVE_SPEED, 35, 35,0.0, 5.0, imu);
+
+        fastPidRotate(90, 3.0, imu);
+
+        encoderDrive(DRIVE_SPEED, -6, -6,90.0, 5.0, imu);
+
+        encoderStrafe(DRIVE_SPEED,-50,90.0, 8.0, imu);
+
+
+
+        encoderStrafe(DRIVE_SPEED,50,90.0, 8.0, imu);
+
+        encoderDrive(DRIVE_SPEED, -6, -6,90.0, 5.0, imu);
+
+        encoderStrafe(DRIVE_SPEED,-50,90.0, 8.0, imu);
+
+
+        encoderStrafe(DRIVE_SPEED,50,90.0, 8.0, imu);
+
+        encoderDrive(DRIVE_SPEED, -7, -7,90.0, 5.0, imu);
+
+        encoderStrafe(DRIVE_SPEED,-45,90.0, 8.0, imu);
+
+        shoulder.outTakePosition();
+
+        inTakeArm.store();
+
+
+
 
         /*
 
@@ -303,7 +337,7 @@ public class MoveToObservableRed extends LinearOpMode {
         int newLeftFrontTarget, newRightFrontTarget, newLeftBackTarget, newRightBackTarget;
 
         // PID coefficients for straight driving.
-        double driveKp = 0.03;
+        double driveKp = 0.1;
         double driveKi = 0.0;
         double driveKd = 0.005;
 
@@ -402,12 +436,12 @@ public class MoveToObservableRed extends LinearOpMode {
             }
 
             // Apply active braking (brief reverse pulse) to counter momentum.
-            double brakePower = 0.2;
+            double brakePower = 0.8;
             leftFront.setPower(-brakePower);
             rightFront.setPower(-brakePower);
             leftBack.setPower(-brakePower);
             rightBack.setPower(-brakePower);
-            sleep(30);
+            sleep(90);
 
             // Stop all motors.
             leftFront.setPower(0);
@@ -438,36 +472,48 @@ public class MoveToObservableRed extends LinearOpMode {
      * @param timeoutS         Timeout in seconds.
      * @param imu              The IMU sensor.
      */
+    /**
+     * Strafes the robot a set distance with enhanced PID control and telemetry debugging.
+     *
+     * @param speed            The base motor speed.
+     * @param inches           The distance to strafe (positive = right, negative = left).
+     * @param targetHeadingDeg The heading in degrees to maintain (null uses current heading).
+     * @param timeoutS         Timeout in seconds.
+     * @param imu              The IMU sensor.
+     */
     public void encoderStrafe(double speed, double inches, Double targetHeadingDeg, double timeoutS, IMU imu) {
         int newLeftFrontTarget, newRightFrontTarget, newLeftBackTarget, newRightBackTarget;
 
         // PID coefficients for strafing.
-        double strafeKp = 0.04;
-        double strafeKi = 0.0001;
-        double strafeKd = 0.008;
+        double strafeKp = 0.5;
+        double strafeKi = 0.0002;
+        double strafeKd = 0.009;
 
         double lastHeadingError = 0.0;
         double headingIntegralSum = 0.0;
         ElapsedTime pidStrafeTimer = new ElapsedTime();
 
         if (opModeIsActive()) {
+            // Use either the provided target heading or the current heading.
             double targetHeading = (targetHeadingDeg != null) ?
                     Math.toRadians(targetHeadingDeg) :
                     imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
             // Adjustment to correct for minor bias.
-            int adjust = (inches < 0) ? -1 : (inches > 0 ? 1 : 0);
-            double backAdjust = 0; // Extra factor for the back motors.
+            int adjust = 0;//(inches < 0) ? -1 : (inches > 0 ? 1 : 0);
+            double backAdjust = 1; // Extra factor for the back motors.
 
-            // Apply an offset to counter momentum (0.75 inch).
-            double offsetInches = 0.0;
+            // Apply an offset to counter momentum if needed.
+            double offsetInches = -1.0;
             double effectiveInches = (inches > 0) ? inches - offsetInches : inches + offsetInches;
 
+            // Calculate target encoder positions using the strafing constant.
             newLeftFrontTarget = leftFront.getCurrentPosition() + (int)((effectiveInches + adjust) * COUNTS_PER_INCH_STRAFE);
             newRightFrontTarget = rightFront.getCurrentPosition() - (int)((effectiveInches + adjust) * COUNTS_PER_INCH_STRAFE);
             newLeftBackTarget  = leftBack.getCurrentPosition() - (int)((effectiveInches + adjust * backAdjust) * COUNTS_PER_INCH_STRAFE);
             newRightBackTarget = rightBack.getCurrentPosition() + (int)((effectiveInches + adjust * backAdjust) * COUNTS_PER_INCH_STRAFE);
 
+            // Set targets for all motors.
             leftFront.setTargetPosition(newLeftFrontTarget);
             rightFront.setTargetPosition(newRightFrontTarget);
             leftBack.setTargetPosition(newLeftBackTarget);
@@ -484,6 +530,13 @@ public class MoveToObservableRed extends LinearOpMode {
             double basePower = Math.abs(speed);
             double lfPower = basePower, rfPower = basePower, lbPower = basePower, rbPower = basePower;
 
+            // Initial telemetry for debugging.
+            telemetry.addData("Strafe Debug", "Starting strafe command");
+            telemetry.addData("Effective Inches", effectiveInches);
+            telemetry.addData("Target Heading (deg)", Math.toDegrees(targetHeading));
+            telemetry.update();
+
+            // PID control loop with debugging telemetry.
             while (opModeIsActive() &&
                     runtime.seconds() < timeoutS &&
                     (leftFront.isBusy() && rightFront.isBusy() && leftBack.isBusy() && rightBack.isBusy())) {
@@ -495,18 +548,22 @@ public class MoveToObservableRed extends LinearOpMode {
                 pidStrafeTimer.reset();
                 if (deltaTime < 0.001) deltaTime = 0.001;
 
+                // Update integral sum with anti-windup.
                 headingIntegralSum += headingError * deltaTime;
                 double maxIntegral = 0.5 / strafeKi;
                 if (Math.abs(headingIntegralSum) > maxIntegral) {
                     headingIntegralSum = Math.signum(headingIntegralSum) * maxIntegral;
                 }
                 double integralTerm = headingIntegralSum * strafeKi;
+
+                // Derivative term.
                 double derivative = (headingError - lastHeadingError) / deltaTime;
                 lastHeadingError = headingError;
 
+                // Compute the correction term.
                 double correction = (headingError * strafeKp) + integralTerm + (derivative * strafeKd);
 
-                // Adjust motor powers based on strafing direction and correction.
+                // Adjust motor powers based on the computed correction.
                 if (inches > 0) {  // Right strafe.
                     if (correction > 0) { // Need to turn right.
                         lfPower = basePower - correction;
@@ -533,29 +590,44 @@ public class MoveToObservableRed extends LinearOpMode {
                     }
                 }
 
+                // Ensure motor power is within acceptable bounds.
                 lfPower = Math.max(0.05, Math.min(1.0, lfPower));
                 rfPower = Math.max(0.05, Math.min(1.0, rfPower));
                 lbPower = Math.max(0.05, Math.min(1.0, lbPower));
                 rbPower = Math.max(0.05, Math.min(1.0, rbPower));
 
+                // Set motor powers.
                 leftFront.setPower(lfPower);
                 rightFront.setPower(rfPower);
                 leftBack.setPower(lbPower);
                 rightBack.setPower(rbPower);
 
-                telemetry.addData("Target", "LF: %7d  RF: %7d  LB: %7d  RB: %7d",
-                        newLeftFrontTarget, newRightFrontTarget, newLeftBackTarget, newRightBackTarget);
-                telemetry.addData("Position", "LF: %7d  RF: %7d  LB: %7d  RB: %7d",
-                        leftFront.getCurrentPosition(), rightFront.getCurrentPosition(),
-                        leftBack.getCurrentPosition(), rightBack.getCurrentPosition());
-                telemetry.addData("Power", "LF: %.2f, RF: %.2f, LB: %.2f, RB: %.2f", lfPower, rfPower, lbPower, rbPower);
-                telemetry.addData("Heading", "Current: %.2f, Target: %.2f, Error: %.2f°",
-                        Math.toDegrees(currentHeading), Math.toDegrees(targetHeading), Math.toDegrees(headingError));
+                // Send detailed telemetry to FTC Dashboard for debugging/tuning.
+                telemetry.addData("---- Strafe PID Debug ----", "");
+                telemetry.addData("Target Enc (LF)", newLeftFrontTarget);
+                telemetry.addData("Target Enc (RF)", newRightFrontTarget);
+                telemetry.addData("Target Enc (LB)", newLeftBackTarget);
+                telemetry.addData("Target Enc (RB)", newRightBackTarget);
+                telemetry.addData("Current Enc (LF)", leftFront.getCurrentPosition());
+                telemetry.addData("Current Enc (RF)", rightFront.getCurrentPosition());
+                telemetry.addData("Current Enc (LB)", leftBack.getCurrentPosition());
+                telemetry.addData("Current Enc (RB)", rightBack.getCurrentPosition());
+                telemetry.addData("Target Heading (deg)", Math.toDegrees(targetHeading));
+                telemetry.addData("Current Heading (deg)", Math.toDegrees(currentHeading));
+                telemetry.addData("Heading Error (deg)", Math.toDegrees(headingError));
+                telemetry.addData("Delta Time (s)", deltaTime);
+                telemetry.addData("Integral Sum", headingIntegralSum);
+                telemetry.addData("Derivative", derivative);
+                telemetry.addData("Correction", correction);
+                telemetry.addData("Motor Power LF", lfPower);
+                telemetry.addData("Motor Power RF", rfPower);
+                telemetry.addData("Motor Power LB", lbPower);
+                telemetry.addData("Motor Power RB", rbPower);
                 telemetry.update();
             }
 
             // Apply brief active braking.
-            double brakePower = 0.2;
+            double brakePower = 0.8;
             if (inches > 0) { // Right strafe braking.
                 leftFront.setPower(-brakePower);
                 rightFront.setPower(brakePower);
@@ -567,8 +639,9 @@ public class MoveToObservableRed extends LinearOpMode {
                 leftBack.setPower(-brakePower);
                 rightBack.setPower(brakePower);
             }
-            sleep(30);
+            sleep(90);
 
+            // Stop all motors.
             leftFront.setPower(0);
             rightFront.setPower(0);
             leftBack.setPower(0);
@@ -578,6 +651,9 @@ public class MoveToObservableRed extends LinearOpMode {
             rightFront.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             leftBack.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
             rightBack.setMode(DcMotorEx.RunMode.RUN_USING_ENCODER);
+
+            telemetry.addData("Strafe Debug", "Strafe command complete");
+            telemetry.update();
         }
     }
 }

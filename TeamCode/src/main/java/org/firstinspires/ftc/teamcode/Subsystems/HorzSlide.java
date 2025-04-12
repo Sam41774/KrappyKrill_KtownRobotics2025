@@ -33,8 +33,8 @@ public class HorzSlide {
 
         if (amount > 0){
            if (leftPos < RC_HorzSlide.outLeft){
-               this.left.setPosition(leftPos + (amount/500));
-               this.right.setPosition(rightPos - (amount/500));
+               this.left.setPosition(leftPos + (amount/100));
+               this.right.setPosition(rightPos - (amount/100));
            }
            else {
                this.left.setPosition(RC_HorzSlide.outLeft);
@@ -43,8 +43,8 @@ public class HorzSlide {
         }
         else if (amount < 0){
             if (leftPos > RC_HorzSlide.inLeft){
-                this.left.setPosition(leftPos + (amount/500));
-                this.right.setPosition(rightPos - (amount/500));
+                this.left.setPosition(leftPos + (amount/100));
+                this.right.setPosition(rightPos - (amount/100));
             }
             else {
                 this.left.setPosition(RC_HorzSlide.inLeft);
