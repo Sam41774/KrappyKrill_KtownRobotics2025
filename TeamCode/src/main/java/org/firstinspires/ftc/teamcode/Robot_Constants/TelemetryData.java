@@ -8,5 +8,6 @@ public class TelemetryData {
     public static int inTakeArmCount = 0;
     public static int spinnerMode = 0; // 0 - stopped, 1 - intaking, 2 - outing
     public static int wristPosition = 0; // 0 - storage, 1 - intake , 2- outTake, 3 - clip
-    public static int slideCount =0;
+    public static int slideCountL =0;
+    public static int slideCountR =0;
 }

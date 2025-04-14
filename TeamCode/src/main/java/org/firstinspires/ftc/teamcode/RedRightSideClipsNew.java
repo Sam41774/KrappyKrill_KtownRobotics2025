@@ -10,8 +10,8 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.teamcode.Subsystems.Claw;
 import org.firstinspires.ftc.teamcode.Subsystems.Drive;
 import org.firstinspires.ftc.teamcode.Subsystems.HorzSlide;
@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.VertSlide;
 import org.firstinspires.ftc.teamcode.Subsystems.Wrist;
 
 @Config
-@Autonomous(name = "Krilly Auto Drive With Fast PID", group = "Robot")
-public class RedRightSideClips extends LinearOpMode {
+@Autonomous(name = "RedRightSideClipsNew", group = "Robot")
+public class RedRightSideClipsNew extends LinearOpMode {
 
     // Define drive motors.
     private DcMotorEx leftFront = null;
@@ -39,7 +39,7 @@ public class RedRightSideClips extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 4.094;      // For calculating circumference.
     static final double COUNTS_PER_INCH = 32.1094890; // ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI)) * 1.025;
     static final double COUNTS_PER_INCH_STRAFE = 29.06746;
-    static final double DRIVE_SPEED = 0.3;
+    static final double DRIVE_SPEED = 0.4;
 
     static final double TURN_SPEED = 0.5;
 
@@ -109,65 +109,85 @@ public class RedRightSideClips extends LinearOpMode {
         telemetry.addData("Starting Heading (deg)", Math.toDegrees(startingHeading));
         telemetry.update();
 
+        claw.close();
+
         waitForStart();
 
-        setStartingPosition(horzSlide, inTakeArm, claw, shoulder, wrist);
+
 
         // Using the new relative heading concept:
         // For example, a command with heading 0 now means "starting heading."
+        sleep(1000);
+
+        setStartingPosition(horzSlide, inTakeArm, claw, shoulder, wrist);
+
         encoderDrive(DRIVE_SPEED, 16, 16, 0.0, 5.0, imu);
-        encoderStrafe(DRIVE_SPEED, 14, 0.0, 5.0, imu);
-        encoderDrive(DRIVE_SPEED, 35, 35, 0.0, 5.0, imu);
-        fastPidRotate(90, 3.0, imu);
+
+        fastPidRotate(180.0,3.0,imu);
+
+        vertSlide.clipPosition();
+
+        sleep(500);
+
+        encoderStrafe(DRIVE_SPEED, 20, 180.0, 5.0, imu);
+
+        encoderDrive(DRIVE_SPEED,-15,-15,180.0,3.0,imu);
+
+        sleep(500);
+
+        claw.open();
+
+        //sleep(1000);
+
+        encoderDrive(DRIVE_SPEED, 15, 15, 180.0, 3.0, imu);
+
+        encoderStrafe(DRIVE_SPEED, -34, 180.0, 5.0, imu);
+
+        encoderDrive(DRIVE_SPEED, -35, -35, 180.0, 5.0, imu);
+
+        fastPidRotate(90,2.0,imu);
+
+
         encoderDrive(DRIVE_SPEED, -6, -6, 90.0, 5.0, imu);
         encoderStrafe(DRIVE_SPEED, -60, 90.0, 8.0, imu);
 
         encoderStrafe(DRIVE_SPEED, 60, 90.0, 8.0, imu);
-        encoderDrive(DRIVE_SPEED, -6, -6, 90.0, 5.0, imu);
+        encoderDrive(DRIVE_SPEED, -8, -8, 90.0, 5.0, imu);
         encoderStrafe(DRIVE_SPEED, -60, 90.0, 8.0, imu);
 
         encoderStrafe(DRIVE_SPEED, 60, 90.0, 8.0, imu);
-        encoderDrive(DRIVE_SPEED, -6, -6, 90.0, 5.0, imu);
+        encoderDrive(DRIVE_SPEED, -4, -4, 90.0, 5.0, imu);
         encoderStrafe(DRIVE_SPEED, -60, 90.0, 8.0, imu);
 
         encoderDrive(DRIVE_SPEED, 20, 20, 90.0, 3, imu);
-        fastPidRotate(0, 5, imu);
-        encoderDrive(DRIVE_SPEED, 8, 8, 0.0, 3, imu);
-
-        shoulder.clipInTakePosition();
-        wrist.clipInTake();
-        encoderDrive(0.1, -8, -8, 0.0, 5.0, imu);
-        claw.close();
-        sleep(100);
-        vertSlide.clipPosition();
-        sleep(500);
-
-
-        encoderDrive(DRIVE_SPEED, 12, 12, 0.0, 4.0, imu);
-        shoulder.clipOutTakePosition();
-        wrist.clipOutTake();
-
-        fastPidRotate(180,2.0,imu);
-        encoderStrafe(DRIVE_SPEED,36,180.0,3.0,imu);
-        encoderDrive(DRIVE_SPEED,-12,-12,180.0,3.0,imu);
-
-        sleep(200);
-        claw.open();
-
-        sleep(1000);
+        shoulder.outTakePosition();
+        wrist.outTake();
         inTakeArm.store();
+        vertSlide.runToMin();
+
+        fastPidRotate(0, 5, imu);
+
+
+
+
+
+
+
+
+
+
 
         telemetry.addData("Path", "Complete");
         telemetry.update();
-        sleep(1000);
+        sleep(5000);
     }
 
     private void setStartingPosition(HorzSlide horzSlide, InTakeArm inTakeArm, Claw claw, Shoulder shoulder, Wrist wrist) {
         horzSlide.goIn();
         inTakeArm.goUp();
-        claw.open();
-        shoulder.inTakePosition();
-        wrist.inTake();
+        claw.close();
+        shoulder.clipOutTakePosition();
+        wrist.clipOutTake();
     }
 
     /**
@@ -430,7 +450,7 @@ public class RedRightSideClips extends LinearOpMode {
     public void encoderStrafe(double speed, double inches, Double targetHeadingDeg, double timeoutS, IMU imu) {
         int newLeftFrontTarget, newRightFrontTarget, newLeftBackTarget, newRightBackTarget;
 
-        double strafeKp = 0.5;
+        double strafeKp = 0.2;
         double strafeKi = 0.0002;
         double strafeKd = 0.009;
 

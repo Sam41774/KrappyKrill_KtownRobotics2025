@@ -183,7 +183,12 @@ public class KrillyTeleop25 extends LinearOpMode {
             driveTrain.drive(left_y * speedMultiplier, left_x * speedMultiplier, right_x * speedMultiplier);
 
 
+
+
             telemetry.addData("motor Position", TelemetryData.inTakeArmCount);
+            telemetry.addData("left Pos:", TelemetryData.slideCountL);
+            telemetry.addData("right Pos:",TelemetryData.slideCountR);
+
             telemetry.update();
         }
     }
