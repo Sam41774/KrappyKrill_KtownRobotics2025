@@ -10,7 +10,7 @@ public class RC_Shoulder {
     public static double outTakeRight = 0.65;
     public static double outTakeLeft = 0.4;
 
-    public static double clipLeft = 0.17;
+    public static double clipLeft = 0.1;
     public static double clipRight = 0.88;
 
     public static double clipOutLeft = 0.35;
