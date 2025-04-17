@@ -22,6 +22,7 @@ public class VertSlide {
 
         // Reset the encoders on both motors
         left.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        //left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
 
         // Set to run using encoders (initially); later modes will be set dynamically.
@@ -92,12 +93,15 @@ public class VertSlide {
                 holdPosition = currentPosition;
                 isHolding = true;
 
-                // Switch both motors to position control mode using the hold position
-                left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-                right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
                 left.setTargetPosition(holdPosition);
                 right.setTargetPosition(holdPosition);
+
+                // Switch both motors to position control mode using the hold position
+                left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+                //left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+                right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+
+
 
                 left.setPower(RC_VertSlide.holdPower);
                 right.setPower(RC_VertSlide.holdPower);
@@ -116,6 +120,7 @@ public class VertSlide {
         right.setTargetPosition(targetPosition);
 
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         left.setPower(1.0);
@@ -133,6 +138,7 @@ public class VertSlide {
         right.setTargetPosition(targetPosition);
 
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         left.setPower(1.0);
@@ -150,6 +156,7 @@ public class VertSlide {
         right.setTargetPosition(targetPosition);
 
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         left.setPower(1.0);
@@ -158,7 +165,7 @@ public class VertSlide {
         isHolding = true;
 
         TelemetryData.slideCountR = right.getCurrentPosition();
-        TelemetryData.slideCountL = right.getCurrentPosition();
+        //TelemetryData.slideCountL = right.getCurrentPosition();
     }
 
     public void climb() {
@@ -167,6 +174,7 @@ public class VertSlide {
         right.setTargetPosition(targetPosition);
 
         left.setMode(DcMotor.RunMode.RUN_TO_POSITION);
+        //left.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
         right.setMode(DcMotor.RunMode.RUN_TO_POSITION);
 
         left.setPower(1.0);
@@ -190,3 +198,8 @@ public class VertSlide {
         return error <= tolerance;
     }
 }
+
+
+
+
+

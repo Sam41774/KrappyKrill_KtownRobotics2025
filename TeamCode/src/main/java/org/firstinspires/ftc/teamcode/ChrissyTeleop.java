@@ -175,15 +175,21 @@ public class ChrissyTeleop extends LinearOpMode {
             }
 
 
+            double speedMultiplier = 1.0;
 
-            // Speed toggle (half speed if holding left bumper)
-            double speedMultiplier = currentGamepad1.left_bumper ? RC_Claw.slowDrive : 1.0;
+            //Speed toggle (half rotation speed if holding right bumper)
+            if (currentGamepad1.right_bumper){
+                speedMultiplier = currentGamepad1.right_bumper ? 0.5 : 1.0;
+            }
+            else if (currentGamepad1.left_bumper){
+                speedMultiplier = currentGamepad1.left_bumper ? 0.3 : 1.0;
+            }
 
-            //Speed toggle (half rotation speed if holding left bumper)
-            double rotationMultiplier = currentGamepad1.right_bumper ? 0.5 : 1.0;
+
+
 
             // Driving with scaled speed
-            driveTrain.drive(left_y * speedMultiplier, left_x * speedMultiplier, right_x * speedMultiplier * rotationMultiplier);
+            driveTrain.drive(left_y * speedMultiplier, left_x * speedMultiplier, right_x * speedMultiplier);
 
 
 
