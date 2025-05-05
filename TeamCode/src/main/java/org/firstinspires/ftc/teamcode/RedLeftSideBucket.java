@@ -119,12 +119,19 @@ public class RedLeftSideBucket extends LinearOpMode {
 
 
 
+        encoderDrive(DRIVE_SPEED, 6, 6,0.0, 5.0, imu);
+
+        encoderStrafe(DRIVE_SPEED,-12,0.0,3.0, imu);
+
+        fastPidRotate(-45, 2.0,imu);
+
+
 
 
 
         encoderDrive(DRIVE_SPEED, 16, 16,0.0, 5.0, imu);
 
-        fastPidRotate(38.0,5.0, imu);
+        fastPidRotate(25.0,5.0, imu);
 
         inTakeArm.goDown();
 
@@ -132,7 +139,10 @@ public class RedLeftSideBucket extends LinearOpMode {
 
         horzSlide.goOut();
 
-        sleep(3000);
+        sleep(1000);
+
+        encoderDrive(DRIVE_SPEED,5,5,25.0,2.0,imu);
+        encoderDrive(DRIVE_SPEED,-5,-5,25.0,2.0,imu);
 
         inTakeArm.goUp();
 
@@ -144,7 +154,7 @@ public class RedLeftSideBucket extends LinearOpMode {
 
         claw.close();
 
-        fastPidRotate(-38.0, 5.0, imu);
+        fastPidRotate(-30.0, 5.0, imu);
 
         //sleep(2000);
 

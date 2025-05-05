@@ -22,8 +22,8 @@ import org.firstinspires.ftc.teamcode.Subsystems.VertSlide;
 import org.firstinspires.ftc.teamcode.Subsystems.Wrist;
 
 @Config
-@Autonomous(name = "ChrisRedHook", group = "Robot")
-public class ChrisRedHook extends LinearOpMode {
+@Autonomous(name = "ChrisBlueBucket", group = "Robot")
+public class ChrissyLeftSideBlueBucketNeq extends LinearOpMode {
 
     // Define drive motors.
     private DcMotorEx leftFront = null;
@@ -122,83 +122,95 @@ public class ChrisRedHook extends LinearOpMode {
 
         setStartingPosition(horzSlide, inTakeArm, claw, shoulder, wrist);
 
-        encoderDrive(DRIVE_SPEED, 16, 16, 0.0, 5.0, imu);
+        encoderStrafe(DRIVE_SPEED, -9,0.0,3.0,imu);
 
-        fastPidRotate(180.0,3.0,imu);
+        vertSlide.runToMax();
 
-        vertSlide.clipPosition();
+        sleep(1000);
 
-        sleep(250);
+        encoderDrive(DRIVE_SPEED,-4,-4,0.0,2.0,imu);
 
-        encoderStrafe(DRIVE_SPEED, 24, 180.0, 5.0, imu);
 
-        encoderDrive(DRIVE_SPEED,-15,-15,180.0,3.0,imu);
 
-        sleep(500);
+
+
+        shoulder.clipOutTakePosition();
 
         claw.open();
 
-        //sleep(1000);
+        sleep(500);
 
-        encoderDrive(DRIVE_SPEED, 15, 15, 180.0, 3.0, imu);
+        shoulder.inTakePosition();
 
-        inTakeArm.store();
 
-        encoderStrafe(DRIVE_SPEED, -43, 180.0, 5.0, imu);
 
-        encoderDrive(DRIVE_SPEED, -35, -35, 180.0, 5.0, imu);
-
-        fastPidRotate(90,2.0,imu);
+        encoderDrive(DRIVE_SPEED, 8,8,0.0,3.0,imu);
 
         vertSlide.runToMin();
 
-        encoderDrive(DRIVE_SPEED, -12, -12, 90.0, 5.0, imu);
-        encoderStrafe(DRIVE_SPEED, -55, 90.0, 8.0, imu);
+        fastPidRotate(45,2.0,imu);
 
-        encoderStrafe(DRIVE_SPEED, 55, 90.0, 8.0, imu);
-        encoderDrive(DRIVE_SPEED, -8, -8, 90.0, 5.0, imu);
-        encoderStrafe(DRIVE_SPEED, -55, 90.0, 6.0, imu);
-
-        encoderStrafe(DRIVE_SPEED, 55, 90.0, 8.0, imu);
-        encoderDrive(DRIVE_SPEED, -8, -8, 90.0, 5.0, imu);
-        encoderStrafe(DRIVE_SPEED, -55, 90.0, 6.0, imu);
-
-        encoderDrive(DRIVE_SPEED, 20, 20, 90.0, 3, imu);
-        inTakeArm.store();
-
-        fastPidRotate(0, 2.5, imu);
-
-        encoderDrive(DRIVE_SPEED, -6,-6, 0.0, 2.5, imu);
-
-        vertSlide.clipPosition();
-
-        sleep(250);
-
-        shoulder.clipInTakePosition();
-
-        sleep(250);
-
-        claw.close();
-
-        sleep(250);
-
-        encoderDrive(DRIVE_SPEED, 16, 16, 0.0, 5.0, imu);
-
-        fastPidRotate(180.0,3.0,imu);
-
-        vertSlide.clipPosition();
-
-        sleep(250);
-
-        encoderStrafe(DRIVE_SPEED, 24, 180.0, 5.0, imu);
-
-        encoderDrive(DRIVE_SPEED,-15,-15,180.0,3.0,imu);
+        //encoderStrafe(DRIVE_SPEED,-2,45.0,2.0,imu);
+        shoulder.outTakePosition();
 
         sleep(500);
 
+        inTakeArm.store();
+
+
+
+        encoderDrive(DRIVE_SPEED,10,10,45.0,3.0,imu);
+
+        //encoderDrive(DRIVE_SPEED, 20,20,45.0,3.0,imu);
+
+        //fastPidRotate();
+
+        sleep(2500);
+
+        inTakeArm.goUp();
+
+        sleep(1500);
+
+        horzSlide.goIn();
+
+
+        sleep(1500);
+
+        claw.close();
+
+        vertSlide.runToMax();
+
+        spinner.stop();
+
+        encoderDrive(DRIVE_SPEED,-10,-10,45.0,3.0,imu);
+
+        fastPidRotate(0,2.0,imu);
+
+        encoderDrive(DRIVE_SPEED,-6,-6,0.0,2.0,imu);
+
+        shoulder.clipOutTakePosition();
+
+        sleep(3000);
+
         claw.open();
 
+        sleep(500);
 
+        encoderDrive(DRIVE_SPEED,6,6,0.0,2.0,imu);
+
+
+
+
+
+
+        shoulder.outTakePosition();
+        wrist.outTake();
+        inTakeArm.store();
+        vertSlide.runToMin();
+
+
+
+        //fastPidRotate(0, 5, imu);
 
 
 

@@ -7,7 +7,7 @@ import com.qualcomm.robotcore.hardware.DcMotorSimple;
 public class RC_inTakeArm {
 
     public static int minCount = 245;
-    public static int maxCount = 440;
+    public static int maxCount = 430;
     public static int storePosition = 10;
     public static double holdPower = 0.1;
     public static double power = 0.5;

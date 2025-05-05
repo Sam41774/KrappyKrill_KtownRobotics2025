@@ -39,7 +39,7 @@ public class RedRightSideClipsNew extends LinearOpMode {
     static final double WHEEL_DIAMETER_INCHES = 4.094;      // For calculating circumference.
     static final double COUNTS_PER_INCH = 32.1094890; // ((COUNTS_PER_MOTOR_REV * DRIVE_GEAR_REDUCTION) / (WHEEL_DIAMETER_INCHES * Math.PI)) * 1.025;
     static final double COUNTS_PER_INCH_STRAFE = 29.06746;
-    static final double DRIVE_SPEED = 0.3;
+    static final double DRIVE_SPEED = 0.4;
 
     static final double TURN_SPEED = 0.5;
 
@@ -109,9 +109,11 @@ public class RedRightSideClipsNew extends LinearOpMode {
         telemetry.addData("Starting Heading (deg)", Math.toDegrees(startingHeading));
         telemetry.update();
 
-        claw.close();
 
         waitForStart();
+
+        claw.close();
+
 
 
 
@@ -141,23 +143,28 @@ public class RedRightSideClipsNew extends LinearOpMode {
 
         encoderDrive(DRIVE_SPEED, 15, 15, 180.0, 3.0, imu);
 
-        encoderStrafe(DRIVE_SPEED, -34, 180.0, 5.0, imu);
+        inTakeArm.store();
+
+        encoderStrafe(DRIVE_SPEED, -43, 180.0, 5.0, imu);
 
         encoderDrive(DRIVE_SPEED, -35, -35, 180.0, 5.0, imu);
 
         fastPidRotate(90,2.0,imu);
 
+        vertSlide.runToMin();
 
-        encoderDrive(DRIVE_SPEED, -6, -6, 90.0, 5.0, imu);
-        encoderStrafe(DRIVE_SPEED, -60, 90.0, 8.0, imu);
 
-        encoderStrafe(DRIVE_SPEED, 60, 90.0, 8.0, imu);
+
+        encoderDrive(DRIVE_SPEED, -10, -10, 90.0, 5.0, imu);
+        encoderStrafe(DRIVE_SPEED, -55, 90.0, 8.0, imu);
+
+        encoderStrafe(DRIVE_SPEED, 55, 90.0, 8.0, imu);
         encoderDrive(DRIVE_SPEED, -8, -8, 90.0, 5.0, imu);
-        encoderStrafe(DRIVE_SPEED, -60, 90.0, 8.0, imu);
+        encoderStrafe(DRIVE_SPEED, -55, 90.0, 6.0, imu);
 
-        encoderStrafe(DRIVE_SPEED, 60, 90.0, 8.0, imu);
-        encoderDrive(DRIVE_SPEED, -4, -4, 90.0, 5.0, imu);
-        encoderStrafe(DRIVE_SPEED, -60, 90.0, 8.0, imu);
+        encoderStrafe(DRIVE_SPEED, 55, 90.0, 8.0, imu);
+        encoderDrive(DRIVE_SPEED, -8, -8, 90.0, 5.0, imu);
+        encoderStrafe(DRIVE_SPEED, -55, 90.0, 6.0, imu);
 
         encoderDrive(DRIVE_SPEED, 20, 20, 90.0, 3, imu);
         shoulder.outTakePosition();

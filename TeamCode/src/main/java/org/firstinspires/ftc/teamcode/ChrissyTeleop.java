@@ -107,6 +107,7 @@ public class ChrissyTeleop extends LinearOpMode {
                 else if (TelemetryData.wristPosition == 3){
                     shoulder.clipOutTakePosition();
                     wrist.clipOutTake();
+                    vertSlide.clipPosition();
                 }
 
             }
@@ -186,11 +187,8 @@ public class ChrissyTeleop extends LinearOpMode {
             }
 
 
-
-
             // Driving with scaled speed
             driveTrain.drive(left_y * speedMultiplier, left_x * speedMultiplier, right_x * speedMultiplier);
-
 
 
 

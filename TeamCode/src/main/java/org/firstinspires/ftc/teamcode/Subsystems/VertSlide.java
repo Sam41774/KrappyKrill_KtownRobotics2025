@@ -37,7 +37,7 @@ public class VertSlide {
     public void setPower(double rightTrigger, double leftTrigger) {
         double slidePowerInput = rightTrigger - leftTrigger;
         // Use only the right motor encoder reading for all calculations
-        int currentPosition = right.getCurrentPosition();
+        int currentPosition = left.getCurrentPosition();
 
         // --- Movement: manual control when significant trigger input ---
         if (Math.abs(slidePowerInput) > 0.05) {  // Deadzone threshold
@@ -193,7 +193,7 @@ public class VertSlide {
 
     // Similarly, atTargetPosition() now checks the error based on the right encoder only.
     public boolean atTargetPosition() {
-        int error = Math.abs(right.getTargetPosition() - right.getCurrentPosition());
+        int error = Math.abs(right.getTargetPosition() - left.getCurrentPosition());
         int tolerance = 10; // Allowable error range in encoder counts
         return error <= tolerance;
     }
